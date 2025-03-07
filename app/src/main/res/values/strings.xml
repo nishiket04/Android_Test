@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Test</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="LoginHeader">Account</string>
+    <string name="LoginDescription">Enter your mobile number to proceed.</string>
+    <string name="loginbtn">Continue</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="verify">Verify</string>
+    <string name="didn_t_received_otp">Didn’t received OTP?</string>
+</resources>
