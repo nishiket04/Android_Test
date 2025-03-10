@@ -8,4 +8,5 @@
     <string name="otp_verification">OTP Verification</string>
     <string name="verify">Verify</string>
     <string name="didn_t_received_otp">Didn’t received OTP?</string>
+    <string name="logout">Logout</string>
 </resources>

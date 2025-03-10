@@ -1,19 +1,17 @@
 package com.nishiket.test.viewmodel
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.nishiket.test.model.LoginResponse
-import com.nishiket.test.utils.network.RetrofitInterface
 import com.nishiket.test.utils.MyApp
+import com.nishiket.test.utils.network.RetrofitInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class LoginViewModel : ViewModel() {
+class UserDataViewModel : ViewModel() {
     private val retrofit: RetrofitInterface? =
         MyApp.RETROFIT_INSTANCE?.create(RetrofitInterface::class.java)
     private var _isSuccess = false
@@ -31,11 +29,11 @@ class LoginViewModel : ViewModel() {
         _isSuccess = false
     }
 
-    fun sendOtp(number: String) {
-        Log.d("TAG", "odkdkdncjksdncjd555")
+    fun verifyOtp(number: String,otp:String) {
         CoroutineScope(Dispatchers.Default).launch {
-            val response = retrofit?.sendOtp(number)
+            val response = retrofit?.verifyOtp(number,otp.toInt())
             response?.let {
+                Log.d("TAG", "verifyOtp: ${it.code()}")
                 if (it.isSuccessful && it.code() == 200) {
                     _isSuccess = true
                     mutableLiveData.postValue(it.body())

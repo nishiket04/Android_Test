@@ -48,6 +48,7 @@
         android:drawableStart="@drawable/call"
         android:drawablePadding="16dp"
         android:hint="Mobile Number"
+        android:maxLength="10"
         android:inputType="number"
         android:padding="8dp"
         android:textColorHint="@color/description_bold_color"

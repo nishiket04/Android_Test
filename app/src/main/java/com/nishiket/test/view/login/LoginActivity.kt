@@ -18,7 +18,7 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
-        supportFragmentManager.beginTransaction().add(R.id.fragment_container_view,LoginFragment()).addToBackStack(null).commit()
+        supportFragmentManager.beginTransaction().add(R.id.fragment_container_view, LoginFragment()).commit()
 
     }
 }

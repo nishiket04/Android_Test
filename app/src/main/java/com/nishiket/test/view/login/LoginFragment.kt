@@ -3,25 +3,21 @@ package com.nishiket.test.view.login
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import androidx.lifecycle.ViewModel
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.nishiket.test.R
-import com.nishiket.test.RetrofitInteface
-import com.nishiket.test.utils.MyApp
 import com.nishiket.test.viewmodel.LoginViewModel
-import retrofit2.Callback
-import retrofit2.Retrofit
-import retrofit2.create
 
 class LoginFragment : Fragment() {
-    private lateinit var edt_number :EditText
-    private lateinit var btn_login :Button
+    private lateinit var edt_number: EditText
+    private lateinit var btn_login: Button
     private lateinit var viewModel: LoginViewModel
+    private var number: String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,15 +30,24 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         findId(view)
         viewModel = ViewModelProvider(this)[LoginViewModel::class.java]
+        viewModel.liveData.observe(viewLifecycleOwner, {
+            Toast.makeText(context, it.meta.message, Toast.LENGTH_LONG).show()
+            if (viewModel.isSuccess) {
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container_view, VerificationFragment().apply { arguments = bundleOf("number" to "+1$number") })
+                    .addToBackStack(null).commit()
+                viewModel.resetSuccess()
+            }
+        })
         btn_login.setOnClickListener {
-            val number = edt_number.text.toString()
-            if(number.isNotEmpty()){
-                viewModel.sendOtp(number)
+            number = edt_number.text.toString()
+            if (number.isNotEmpty()) {
+                viewModel.sendOtp("+1" + number)
             }
         }
     }
 
-    private fun findId(view: View){
+    private fun findId(view: View) {
         edt_number = view.findViewById(R.id.edt_number)
         btn_login = view.findViewById(R.id.btn_login)
     }

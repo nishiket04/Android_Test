@@ -39,7 +39,6 @@
         android:layout_marginEnd="16dp"
         android:fontFamily="@font/manrope"
         android:lineHeight="24dp"
-        android:text="We have sent the verification code to your (705) 555-0127 mobile number."
         android:textAlignment="center"
         android:textColor="@color/description_color"
         android:textFontWeight="400"
@@ -66,7 +65,10 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:background="@drawable/edt_drawable"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/edt_opt_digit2"
@@ -74,7 +76,10 @@
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/edt_drawable"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/edt_opt_digit3"
@@ -82,7 +87,10 @@
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/edt_drawable"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:textSize="25dp" />
 
         <EditText
             android:id="@+id/edt_opt_digit4"
@@ -90,7 +98,10 @@
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/edt_drawable"
-            android:inputType="number" />
+            android:inputType="number"
+            android:maxLength="1"
+            android:textAlignment="center"
+            android:textSize="25dp" />
     </LinearLayout>
 
     <TextView
@@ -105,6 +116,21 @@
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="@+id/linearLayout"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/txt_resend_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:fontFamily="@font/manrope_bold"
+        android:lineHeight="24dp"
+        android:text="Resend OTP"
+        android:textColor="#273B3C"
+        android:textFontWeight="700"
+        android:textSize="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/txt_sec"
@@ -135,7 +161,7 @@
         app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_resend_otp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
