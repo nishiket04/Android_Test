@@ -4,16 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.nishiket.test.model.Data
 import com.nishiket.test.model.EditProfile
-import com.nishiket.test.model.EditProfileModel
-import com.nishiket.test.model.LoginResponse
+import com.nishiket.test.model.EditProfileRequest
 import com.nishiket.test.utils.MyApp
 import com.nishiket.test.utils.network.RetrofitInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
+import okhttp3.MultipartBody
 
 class EditProfileViewModel : ViewModel() {
     private val retrofit: RetrofitInterface? =
@@ -33,14 +31,59 @@ class EditProfileViewModel : ViewModel() {
         _isSuccess = false
     }
 
-    fun editProfile(data:EditProfileModel,auth:String) {
+    fun editProfile(name: String, email: String, dob: String, auth: String) {
         CoroutineScope(Dispatchers.Default).launch {
-            val response = retrofit?.editProfile(auth,data)
+            val response = retrofit?.editProfile("Bearer " + auth, name, email, dob)
             response?.let {
                 Log.d("TAG", "verifyOtp: ${it.code()}")
                 if (it.isSuccessful && it.code() == 200) {
                     _isSuccess = true
                     mutableLiveData.postValue(it.body())
+                    Log.d("TAG", "editProfile:${it.code()} ${it.headers()} ${it.body()}")
+                } else {
+                    _isSuccess = false
+                }
+            }
+        }
+    }
+
+    fun editProfileImage(
+        auth: String,
+        username: String,
+        gender: String,
+        bio: String,
+        profile_photo: MultipartBody.Part
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val response = retrofit?.editProfile1("Bearer " + auth, username, gender, bio)
+            response?.let {
+                Log.d("TAG", "verifyOtp: ${it.code()}")
+                if (it.isSuccessful && it.code() == 200) {
+                    val imageResponse = retrofit?.editProfileImage("Bearer " + auth, profile_photo)
+                    imageResponse?.let {
+                        _isSuccess = true
+                        mutableLiveData.postValue(it.body())
+                        Log.d("TAG", "editProfile:${it.code()} ${it.headers()} ${it.body()}")
+                    }
+                } else {
+                    _isSuccess = false
+                }
+            }
+        }
+    }
+
+    fun editProfileInterest(
+        auth: String,
+        requestBody: EditProfileRequest
+    ) {
+        CoroutineScope(Dispatchers.Default).launch {
+            val response = retrofit?.editProfileInterest("Bearer " + auth,requestBody)
+            response?.let {
+                Log.d("TAG", "verifyOtp: ${it.code()}")
+                if (it.isSuccessful && it.code() == 200) {
+                    _isSuccess = true
+                    mutableLiveData.postValue(it.body())
+                    Log.d("TAG", "editProfile:${it.code()} ${it.headers()} ${it.body()}")
                 } else {
                     _isSuccess = false
                 }

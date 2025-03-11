@@ -1,30 +1,36 @@
 package com.nishiket.test.view.editprofile
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PackageManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.nishiket.test.R
+import com.nishiket.test.adapter.EditProfileViewPagerAdapter
+import com.nishiket.test.databinding.ActivityEditProfileBinding
 import com.nishiket.test.model.Data
-import com.nishiket.test.view.login.LoginFragment
 
 class EditProfileActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    lateinit var activityEditProfileBinding: ActivityEditProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_edit_profile)
+        activityEditProfileBinding = ActivityEditProfileBinding.inflate(layoutInflater)
+        setContentView(activityEditProfileBinding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -32,12 +38,14 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         val intent = intent
-        val data : Data? = intent.extras?.getParcelable("data")
+        val data: Data? = intent.extras?.getParcelable("data")
         val auth = intent.extras?.getString("auth")
         val bundle = Bundle().apply {
             putParcelable("data", data)
-            putString("auth",auth)
+            putString("auth", auth)
         }
+
+        activityEditProfileBinding.viewPager.isUserInputEnabled = false
 
         when {
             ContextCompat.checkSelfPermission(
@@ -60,7 +68,39 @@ class EditProfileActivity : AppCompatActivity() {
             }
         }
 
-        supportFragmentManager.beginTransaction().add(R.id.fragment_container_view, ProfileSetup1Fragment().apply { arguments = bundle }).commit()
+        activityEditProfileBinding.txtPrv.setOnClickListener {
+            activityEditProfileBinding.viewPager.currentItem -= 1
+        }
+
+        activityEditProfileBinding.viewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                if (position == 2) {
+                    activityEditProfileBinding.btnLogin.text = "Submit"
+                    activityEditProfileBinding.txtPrv.visibility = View.VISIBLE
+                } else {
+                    activityEditProfileBinding.btnLogin.text = "Next"
+                    activityEditProfileBinding.txtPrv.visibility = View.VISIBLE
+                }
+            }
+        })
+
+        val fragments = listOf(ProfileSetup1Fragment().apply { arguments = bundle },
+            ProfileSetup2Fragment().apply { arguments = bundle },
+            ProfileSetup3Fragment().apply { arguments = bundle })
+
+        val viewPagerAdapter =
+            EditProfileViewPagerAdapter(supportFragmentManager, lifecycle, fragments)
+        activityEditProfileBinding.viewPager.adapter = viewPagerAdapter
+
+        TabLayoutMediator(
+            activityEditProfileBinding.tabLayout,
+            activityEditProfileBinding.viewPager
+        )
+        { tab, position ->
+            tab.text = ""
+        }.attach()
 
     }
 
@@ -70,7 +110,7 @@ class EditProfileActivity : AppCompatActivity() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == 100 && grantResults.isNotEmpty()){
+        if (requestCode == 100 && grantResults.isNotEmpty()) {
             findLocation()
         }
     }

@@ -2,6 +2,8 @@ package com.nishiket.test.view.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.nishiket.test.R
 import com.nishiket.test.databinding.ActivityHomeBinding
 import com.nishiket.test.model.Data
+import com.nishiket.test.model.EditProfileResponseModel
 import com.nishiket.test.view.login.LoginActivity
 
 class HomeActivity : AppCompatActivity() {
@@ -27,17 +30,48 @@ class HomeActivity : AppCompatActivity() {
         val sp = getSharedPreferences("login_state", MODE_PRIVATE)
         sp.edit().putBoolean("isLogIn",true).apply()
         val intent = intent
-        val arguments : Data? = intent.extras?.getParcelable("data")
-
-        Glide.with(this).load(arguments?.profile_photo).placeholder(R.mipmap.user_image_placeholder).into(activityHomeBinding.circleImageView)
-        sp.edit().putString("total_followers",arguments?.total_followers.toString()).apply()
-        sp.edit().putString("total_followings",arguments?.total_followings.toString()).apply()
-        sp.edit().putString("txtUserName",arguments?.name).apply()
-        sp.edit().putString("txtUserBio",arguments?.bio).apply()
-        sp.edit().putString("txtInterest",arguments?.interests?.get(0) ?: "").apply()
-        sp.edit().putString("txtInterest2",arguments?.interests?.get(1) ?: "").apply()
-        sp.edit().putString("txtInterest3",arguments?.interests?.get(2) ?: "").apply()
-
+        val arguments: Parcelable? = when (val parcelableData = intent.extras?.getParcelable<Parcelable>("data")) {
+            is Data -> parcelableData as Data
+            is EditProfileResponseModel -> parcelableData as EditProfileResponseModel
+            else -> null
+        }
+        val auth:String = intent?.extras?.getString("auth","").toString()
+        arguments?.let { arg ->
+            when (arg) {
+                is Data -> {
+                    Glide.with(this)
+                        .load(arg.profile_photo)
+                        .placeholder(R.mipmap.user_image_placeholder)
+                        .into(activityHomeBinding.circleImageView)
+                    sp.edit().putString("profile_photo",arg.profile_photo).apply()
+                    sp.edit().putString("total_followers", arg.total_followers.toString()).apply()
+                    sp.edit().putString("total_followings", arg.total_followings.toString()).apply()
+                    sp.edit().putString("txtUserName",arg?.name).apply()
+                    sp.edit().putString("txtUserBio",arg?.bio).apply()
+                    sp.edit().putString("txtInterest",arg?.interests?.get(0) ?: "").apply()
+                    sp.edit().putString("txtInterest2",arg?.interests?.get(1) ?: "").apply()
+                    sp.edit().putString("txtInterest3",arg?.interests?.get(2) ?: "").apply()
+                }
+                is EditProfileResponseModel -> {
+                    Glide.with(this)
+                        .load(arg.profilePhoto) // Assuming profilePhoto is inside `data`
+                        .placeholder(R.mipmap.user_image_placeholder)
+                        .into(activityHomeBinding.circleImageView)
+                    sp.edit().putString("profile_photo",arg.profilePhoto).apply()
+                    sp.edit().putString("total_followers", arg.totalFollowers.toString()).apply()
+                    sp.edit().putString("total_followings", arg.totalFollowings.toString()).apply()
+                    sp.edit().putString("txtUserName",arg?.name).apply()
+                    sp.edit().putString("txtUserBio",arg?.bio).apply()
+                    sp.edit().putString("txtInterest",arg?.interests?.get(0) ?: "").apply()
+                    sp.edit().putString("txtInterest2",arg?.interests?.get(1) ?: "").apply()
+                    sp.edit().putString("txtInterest3",arg?.interests?.get(2) ?: "").apply()
+                }
+            }
+        }
+        Glide.with(this)
+            .load(sp.getString("profile_photo",""))
+            .placeholder(R.mipmap.user_image_placeholder)
+            .into(activityHomeBinding.circleImageView)
         activityHomeBinding.txtFollowers.text = sp.getString("total_followers","")
         activityHomeBinding.txtFollowing.text = sp.getString("total_followings","")
         activityHomeBinding.txtUserName.text = sp.getString("txtUserName","")
