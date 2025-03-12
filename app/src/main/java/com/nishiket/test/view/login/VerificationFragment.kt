@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.nishiket.test.R
 import com.nishiket.test.databinding.FragmentVerificationBinding
+import com.nishiket.test.view.editprofile.EditProfileActivity
 import com.nishiket.test.view.home.HomeActivity
 import com.nishiket.test.viewmodel.UserDataViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -49,8 +50,9 @@ class VerificationFragment : Fragment() {
                 Log.d("TAG", "onViewCreated: bshdbjs")
                 val bundle = Bundle().apply {
                     putParcelable("data", it.data)
+                    putString("auth",viewModel.auth)
                 }
-                startActivity(Intent(context, HomeActivity::class.java).putExtras(bundle))
+                startActivity(Intent(context, EditProfileActivity::class.java).putExtras(bundle))
                 activity?.finish()
                 viewModel.resetSuccess()
             }

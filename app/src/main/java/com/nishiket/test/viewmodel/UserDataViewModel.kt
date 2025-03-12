@@ -15,6 +15,7 @@ class UserDataViewModel : ViewModel() {
     private val retrofit: RetrofitInterface? =
         MyApp.RETROFIT_INSTANCE?.create(RetrofitInterface::class.java)
     private var _isSuccess = false
+    private var _auth = ""
     val isSuccess: Boolean
         get() {
             return _isSuccess
@@ -23,6 +24,11 @@ class UserDataViewModel : ViewModel() {
     val liveData: LiveData<LoginResponse>
         get() {
             return mutableLiveData
+        }
+
+    val auth:String
+        get() {
+            return _auth
         }
 
     fun resetSuccess() {
@@ -37,6 +43,7 @@ class UserDataViewModel : ViewModel() {
                 if (it.isSuccessful && it.code() == 200) {
                     _isSuccess = true
                     mutableLiveData.postValue(it.body())
+                    _auth = it.headers().get("X-Authorization-Token").toString()
                 } else {
                     _isSuccess = false
                 }

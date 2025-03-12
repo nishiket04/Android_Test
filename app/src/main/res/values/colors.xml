@@ -5,4 +5,5 @@
     <color name="hader_color">#1A1A1A</color>
     <color name="description_color">#4D4D4D</color>
     <color name="description_bold_color">#333333</color>
+    <color name="intrest_selceted">#273B3C</color>
 </resources>
