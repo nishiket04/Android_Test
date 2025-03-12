@@ -1,18 +1,16 @@
 package com.nishiket.test.utils.network
 
-import com.nishiket.test.model.Data
 import com.nishiket.test.model.EditProfile
 import com.nishiket.test.model.EditProfileRequest
+import com.nishiket.test.model.FeedModel
 import com.nishiket.test.model.LoginResponse
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
-import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
@@ -60,5 +58,10 @@ interface RetrofitInterface {
         @Header("Authorization") auth:String,
         @Body requestBody: EditProfileRequest
     ): Response<EditProfile>
+
+    @GET("v2/get-all-feeds")
+    suspend fun getFeed(
+        @Header("Authorization") auth:String,
+    ): Response<FeedModel>
 
 }

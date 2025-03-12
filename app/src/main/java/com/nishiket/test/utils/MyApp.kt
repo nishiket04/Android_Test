@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MyApp: Application() {
-    private val BASE_URL = "https://strengthen-numbers-stag.dev-imaginovation.net/api/"
+    private val BASE_URL = "https://strengthen-numbers.dev-imaginovation.net/api/"
     companion object{
         @Volatile
         var RETROFIT_INSTANCE: Retrofit? = null

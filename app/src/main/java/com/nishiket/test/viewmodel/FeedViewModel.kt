@@ -4,48 +4,33 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.nishiket.test.model.LoginResponse
+import com.nishiket.test.model.EditProfile
+import com.nishiket.test.model.FeedModel
 import com.nishiket.test.utils.MyApp
 import com.nishiket.test.utils.network.RetrofitInterface
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserDataViewModel : ViewModel() {
+class FeedViewModel() : ViewModel() {
     private val retrofit: RetrofitInterface? =
         MyApp.RETROFIT_INSTANCE?.create(RetrofitInterface::class.java)
-    private var _isSuccess = false
-    private var _auth = ""
-    val isSuccess: Boolean
-        get() {
-            return _isSuccess
-        }
-    private val mutableLiveData = MutableLiveData<LoginResponse>()
-    val liveData: LiveData<LoginResponse>
+    private val mutableLiveData = MutableLiveData<FeedModel>()
+    val liveData: LiveData<FeedModel>
         get() {
             return mutableLiveData
         }
 
-    val auth:String
-        get() {
-            return _auth
-        }
-
-    fun resetSuccess() {
-        _isSuccess = false
-    }
-
-    fun verifyOtp(number: String,otp:String) {
+    fun getFeed(auth: String) {
         CoroutineScope(Dispatchers.Default).launch {
-            val response = retrofit?.verifyOtp(number,otp.toInt())
+            val response = retrofit?.getFeed("Bearer " + auth)
             response?.let {
                 Log.d("TAG", "verifyOtp: ${it.code()}")
                 if (it.isSuccessful && it.code() == 200) {
-                    _isSuccess = true
-                    _auth = it.headers().get("X-Authorization-Token").toString()
                     mutableLiveData.postValue(it.body())
+                    Log.d("TAG", "editProfile:${it.code()} ${it.headers()} ${it.body()}")
                 } else {
-                    _isSuccess = false
+                    mutableLiveData.postValue(it.body())
                 }
             }
         }

@@ -1,89 +1,130 @@
 package com.nishiket.test.view.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.nishiket.test.R
+import com.nishiket.test.adapter.PostAdapter
 import com.nishiket.test.databinding.ActivityHomeBinding
 import com.nishiket.test.model.Data
 import com.nishiket.test.model.EditProfileResponseModel
-import com.nishiket.test.view.login.LoginActivity
+import com.nishiket.test.model.FeedData
+import com.nishiket.test.viewmodel.FeedViewModel
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var activityHomeBinding: ActivityHomeBinding
+    private lateinit var feedViewModel: FeedViewModel
+    private val posts: MutableList<FeedData> = mutableListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
         enableEdgeToEdge()
+        activityHomeBinding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(activityHomeBinding.root)
+        feedViewModel = ViewModelProvider(this)[FeedViewModel::class.java]
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
         val sp = getSharedPreferences("login_state", MODE_PRIVATE)
-        sp.edit().putBoolean("isLogIn",true).apply()
+        sp.edit().putBoolean("isLogIn", true).apply()
         val intent = intent
-        val arguments: Parcelable? = when (val parcelableData = intent.extras?.getParcelable<Parcelable>("data")) {
-            is Data -> parcelableData as Data
-            is EditProfileResponseModel -> parcelableData as EditProfileResponseModel
-            else -> null
+        val argument: Parcelable? =
+            when (val parcelableData = intent.extras?.getParcelable<Parcelable>("data")) {
+                is Data -> parcelableData as Data
+                is EditProfileResponseModel -> parcelableData as EditProfileResponseModel
+                else -> null
+            }
+        val bundle = Bundle().apply {
+            putParcelable("data", argument)
+            putString("auth", sp.getString("auth", ""))
+
         }
-        val auth:String = intent?.extras?.getString("auth","").toString()
-        arguments?.let { arg ->
+        sp.getString("auth", "")?.let { feedViewModel.getFeed(it) }
+        feedViewModel.liveData.observe(this, {
+            Toast.makeText(this, it.meta?.message, Toast.LENGTH_LONG).show()
+            Log.d("TAG", "onCreate: ${it.data}")
+            val adapter = PostAdapter(it.data)
+            activityHomeBinding.rvPost.adapter = adapter
+            activityHomeBinding.rvPost.layoutManager = LinearLayoutManager(
+                this,
+                LinearLayoutManager.VERTICAL, false
+            )
+        })
+        argument?.let { arg ->
             when (arg) {
                 is Data -> {
-                    Glide.with(this)
-                        .load(arg.profile_photo)
-                        .placeholder(R.mipmap.user_image_placeholder)
-                        .into(activityHomeBinding.circleImageView)
-                    sp.edit().putString("profile_photo",arg.profile_photo).apply()
+                    sp.edit().putString("profile_photo", arg.profile_photo).apply()
                     sp.edit().putString("total_followers", arg.total_followers.toString()).apply()
                     sp.edit().putString("total_followings", arg.total_followings.toString()).apply()
-                    sp.edit().putString("txtUserName",arg?.name).apply()
-                    sp.edit().putString("txtUserBio",arg?.bio).apply()
-                    sp.edit().putString("txtInterest",arg?.interests?.get(0) ?: "").apply()
-                    sp.edit().putString("txtInterest2",arg?.interests?.get(1) ?: "").apply()
-                    sp.edit().putString("txtInterest3",arg?.interests?.get(2) ?: "").apply()
+                    sp.edit().putString("txtUserName", arg?.name).apply()
+                    sp.edit().putString("txtUserBio", arg?.bio).apply()
+                    sp.edit().putString("txtInterest", arg?.interests?.get(0) ?: "").apply()
+                    sp.edit().putString("txtInterest2", arg?.interests?.get(1) ?: "").apply()
+                    sp.edit().putString("txtInterest3", arg?.interests?.get(2) ?: "").apply()
                 }
+
                 is EditProfileResponseModel -> {
-                    Glide.with(this)
-                        .load(arg.profilePhoto) // Assuming profilePhoto is inside `data`
-                        .placeholder(R.mipmap.user_image_placeholder)
-                        .into(activityHomeBinding.circleImageView)
-                    sp.edit().putString("profile_photo",arg.profilePhoto).apply()
+                    sp.edit().putString("profile_photo", arg.profilePhoto).apply()
                     sp.edit().putString("total_followers", arg.totalFollowers.toString()).apply()
                     sp.edit().putString("total_followings", arg.totalFollowings.toString()).apply()
-                    sp.edit().putString("txtUserName",arg?.name).apply()
-                    sp.edit().putString("txtUserBio",arg?.bio).apply()
-                    sp.edit().putString("txtInterest",arg?.interests?.get(0) ?: "").apply()
-                    sp.edit().putString("txtInterest2",arg?.interests?.get(1) ?: "").apply()
-                    sp.edit().putString("txtInterest3",arg?.interests?.get(2) ?: "").apply()
+                    sp.edit().putString("txtUserName", arg?.name).apply()
+                    sp.edit().putString("txtUserBio", arg?.bio).apply()
+                    sp.edit().putString("txtInterest", arg?.interests?.get(0) ?: "").apply()
+                    sp.edit().putString("txtInterest2", arg?.interests?.get(1) ?: "").apply()
+                    sp.edit().putString("txtInterest3", arg?.interests?.get(2) ?: "").apply()
                 }
             }
-        }
-        Glide.with(this)
-            .load(sp.getString("profile_photo",""))
-            .placeholder(R.mipmap.user_image_placeholder)
-            .into(activityHomeBinding.circleImageView)
-        activityHomeBinding.txtFollowers.text = sp.getString("total_followers","")
-        activityHomeBinding.txtFollowing.text = sp.getString("total_followings","")
-        activityHomeBinding.txtUserName.text = sp.getString("txtUserName","")
-        activityHomeBinding.txtUserBio.text = sp.getString("txtUserBio","")
-        activityHomeBinding.txtInterest.text = sp.getString("txtInterest","")
-        activityHomeBinding.txtInterest2.text = sp.getString("txtInterest2","")
-        activityHomeBinding.txtInterest3.text = sp.getString("txtInterest3","")
+//            activityHomeBinding.rvPost.adapter = adapter
+//            activityHomeBinding.rvPost.layoutManager = LinearLayoutManager(
+//                this,
+//                LinearLayoutManager.VERTICAL, true
+//            )
 
-        activityHomeBinding.btnLogout.setOnClickListener {
-            sp.edit().clear().apply()
-            startActivity(Intent(this,LoginActivity::class.java))
-            finish()
+
+//            supportFragmentManager.beginTransaction().replace(
+//                activityHomeBinding.homeFragmentContainer.id,
+//                HomeFragment().apply { arguments = bundle }).commit()
+//
+//            activityHomeBinding.bottomNavigationView.setOnItemSelectedListener {
+//                when (it.itemId) {
+//                    R.id.home -> {
+//                        supportFragmentManager.beginTransaction().add(
+//                            activityHomeBinding.homeFragmentContainer.id,
+//                            HomeFragment().apply { arguments = bundle }).commit()
+//                        true
+//                    }
+//
+//                    R.id.nav_element -> {
+//                        true
+//                    }
+//
+//                    R.id.nav_element2 -> {
+//                        true
+//                    }
+//
+//                    R.id.user -> {
+//                        supportFragmentManager.beginTransaction().add(
+//                            activityHomeBinding.homeFragmentContainer.id,
+//                            ProfileFragment().apply { arguments = bundle }).commit()
+//                        true
+//                    }
+//
+//                    else -> {
+//                        false
+//                    }
+//                }
+//            }
         }
     }
 }

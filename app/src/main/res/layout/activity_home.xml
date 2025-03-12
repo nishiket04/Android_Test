@@ -6,187 +6,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.home.HomeActivity">
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_marginTop="200dp"
-        android:src="@mipmap/user_image_placeholder"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_post"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/post_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/manrope_semibold"
-        android:lineHeight="24dp"
-        android:textColor="@color/description_bold_color"
-        android:textFontWeight="600"
-        android:textSize="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+<!--    <FrameLayout-->
+<!--        android:id="@+id/homeFragmentContainer"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/txt_user_bio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:fontFamily="@font/manrope"
-        android:lineHeight="22dp"
-        android:textAlignment="center"
-        android:textColor="#666666"
-        android:textFontWeight="400"
-        android:textSize="14dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_user_name" />
+<!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->
+<!--        android:id="@+id/coordinatorLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?attr/actionBarSize"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
 
-    <LinearLayout
-        android:id="@+id/ll_interests"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_user_bio">
+<!--        <com.google.android.material.bottomappbar.BottomAppBar-->
+<!--            android:id="@+id/bottomAppBar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:layout_gravity="bottom"-->
+<!--            app:fabAlignmentMode="center"-->
+<!--            app:fabCradleMargin="10dp"-->
+<!--            app:fabCradleRoundedCornerRadius="10dp"-->
+<!--            app:fabCradleVerticalOffset="10dp">-->
 
-        <TextView
-            android:id="@+id/txt_interest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/interests_drawable"
-            android:fontFamily="@font/manrope"
-            android:lineHeight="12dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="@color/description_color"
-            android:textFontWeight="500"
-            android:textSize="16dp" />
+<!--            <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--                android:id="@+id/bottomNavigationView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginEnd="16dp"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                app:itemActiveIndicatorStyle="@null"-->
+<!--                app:itemIconSize="25dp"-->
+<!--                app:labelVisibilityMode="unlabeled"-->
+<!--                app:menu="@menu/home_menu" />-->
 
-        <TextView
-            android:id="@+id/txt_interest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/interests_drawable"
-            android:fontFamily="@font/manrope"
-            android:lineHeight="12dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="@color/description_color"
-            android:textFontWeight="500"
-            android:textSize="16dp" />
+<!--        </com.google.android.material.bottomappbar.BottomAppBar>-->
 
-        <TextView
-            android:id="@+id/txt_interest3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/interests_drawable"
-            android:fontFamily="@font/manrope"
-            android:lineHeight="12dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="@color/description_color"
-            android:textFontWeight="500"
-            android:textSize="16dp" />
-    </LinearLayout>
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:contentDescription="@string/app_name"-->
+<!--            android:src="@drawable/baseline_add_24"-->
+<!--            app:layout_anchor="@id/bottomAppBar" />-->
 
-    <LinearLayout
-        android:id="@+id/ll_following_follower"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_interests">
-
-        <TextView
-            android:id="@+id/txt_followers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/manrope_semibold"
-            android:lineHeight="22dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="@color/description_bold_color"
-            android:textFontWeight="600"
-            android:textSize="14dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/manrope"
-            android:text="Followers"
-            android:lineHeight="12dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="#808080"
-            android:textFontWeight="500"
-            android:textSize="16dp" />
-
-
-        <TextView
-            android:id="@+id/txt_following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/manrope_semibold"
-            android:lineHeight="22dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="@color/description_bold_color"
-            android:textFontWeight="600"
-            android:textSize="14dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="Following"
-            android:fontFamily="@font/manrope"
-            android:lineHeight="12dp"
-            android:padding="5dp"
-            android:textAlignment="center"
-            android:textColor="#808080"
-            android:textFontWeight="500"
-            android:textSize="16dp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/btn_drawable"
-        android:fontFamily="@font/manrope_bold"
-        android:lineHeight="24dp"
-        android:text="@string/logout"
-        android:textFontWeight="700"
-        android:textSize="16dp"
-        app:backgroundTint="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ll_following_follower" />
-
+<!--    </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

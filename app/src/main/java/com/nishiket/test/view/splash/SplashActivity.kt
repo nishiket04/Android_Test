@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.nishiket.test.R
-import com.nishiket.test.view.editprofile.EditProfileActivity
 import com.nishiket.test.view.home.HomeActivity
 import com.nishiket.test.view.login.LoginActivity
 

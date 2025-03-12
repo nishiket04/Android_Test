@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
+import androidx.appcompat.app.AppCompatActivity.MODE_PRIVATE
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.nishiket.test.R
@@ -22,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.log
 
 
 class VerificationFragment : Fragment() {
@@ -43,6 +42,7 @@ class VerificationFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val a = arguments?.getString("number", "")
         Log.d("TAG", "onViewCreated: $a")
+        val sp = context?.getSharedPreferences("login_state", MODE_PRIVATE)
         viewModel = ViewModelProvider(this)[UserDataViewModel::class.java]
         viewModel.liveData.observe(viewLifecycleOwner, {
             Toast.makeText(context, it.meta.message, Toast.LENGTH_LONG).show()
@@ -50,9 +50,9 @@ class VerificationFragment : Fragment() {
                 Log.d("TAG", "onViewCreated: bshdbjs")
                 val bundle = Bundle().apply {
                     putParcelable("data", it.data)
-                    putString("auth",viewModel.auth)
+                    sp?.edit()?.putString("auth", viewModel.auth)?.apply()
                 }
-                startActivity(Intent(context, EditProfileActivity::class.java).putExtras(bundle))
+                startActivity(Intent(context, HomeActivity::class.java).putExtras(bundle))
                 activity?.finish()
                 viewModel.resetSuccess()
             }
